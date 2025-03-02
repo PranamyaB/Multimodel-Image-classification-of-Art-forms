@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indian Folk Art Classification</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #f5f3e0, #e3d2b4);
+            background-size: 200% 200%;
+            animation: gradientAnimation 20s ease infinite;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+    
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+    
+        nav {
+            width: 100%;
+            background: rgba(245, 240, 225, 0.9);
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding: 15px 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-bottom: 2px solid #d1c8b5;
+            z-index: 1000;
+        }
+    
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: flex-end;
+            margin: 0;
+            padding: 0;
+        }
+    
+        nav ul li {
+            margin-left: 20px;
+        }
+    
+        nav ul li a {
+            text-decoration: none;
+            color: #5c503d;
+            font-weight: bold;
+            font-size: 1.1rem;
+            position: relative;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+    
+        nav ul li a:hover {
+            color: #b78956;
+            transform: scale(1.1);
+        }
+    
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -3px;
+            width: 100%;
+            height: 2px;
+            background: #b78956;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+    
+        nav ul li a:hover::after {
+            transform: scaleX(1);
+        }
+    
+        h1 {
+            margin-top: 80px;
+            color: #4a4235;
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1s ease, bounce 0.8s ease;
+        }
+    
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+    
+        p {
+            color: #6b614d;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+            animation: fadeIn 1.5s ease;
+        }
+    
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: linear-gradient(135deg, #fff, #eae3d7);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid #d1c8b5;
+            animation: fadeInUp 2s ease;
+        }
+    
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    
+        form:hover {
+            transform: scale(1.02);
+            transition: transform 0.3s ease;
+        }
+    
+        input[type="file"] {
+            padding: 12px;
+            margin-bottom: 25px;
+            border: 2px dashed #c5b89f;
+            border-radius: 8px;
+            background-color: #fdfbf7;
+            font-size: 1rem;
+            width: 100%;
+            transition: border-color 0.3s, background-color 0.3s;
+        }
+    
+        input[type="file"]:focus {
+            border-color: #b78956;
+            background-color: #fff;
+            outline: none;
+        }
+    
+        button {
+            background: linear-gradient(135deg, #b78956, #8c6c3e);
+            color: white;
+            padding: 12px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+    
+        button:hover {
+            background: linear-gradient(135deg, #8c6c3e, #b78956);
+            transform: scale(1.05);
+        }
+    
+        .folk-art-list {
+            margin-top: 50px;
+            text-align: center;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            animation: fadeInUp 2s ease;
+        }
+    
+        .folk-art-item {
+            cursor: pointer;
+            color: #4a4235;
+            font-weight: bold;
+            margin: 10px 15px;
+            padding: 15px 20px;
+            border: 1px solid #b78956;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #fefbf6, #e6dfd3);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+    
+        .folk-art-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+    
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.5s ease;
+        }
+    
+        .modal-content {
+            background: linear-gradient(135deg, #fff, #eae3d7);
+            margin: 10% auto;
+            padding: 25px;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 600px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+            animation: zoomIn 0.4s ease;
+        }
+    
+        @keyframes zoomIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+    
+        .close {
+            color: #6b614d;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+    
+        .close:hover,
+        .close:focus {
+            color: #b78956;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+    
+            form {
+                width: 100%;
+                max-width: 400px;
+            }
+        }
+    
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+    
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </nav>
+    <h1>Indian Folk Art Classification</h1>
+    <p>Upload an image to classify its art style.</p>
+    <form action="{{ url_for('predict') }}" method="POST" enctype="multipart/form-data">
+        <input type="file" name="file" accept="image/*" required>
+        <button type="submit"><i class="fas fa-upload"></i> Predict</button>
+    </form>
+    <div><h2>Available Folk Art Styles</h2></div>
+    <marquee>To Know mre about these ART STYLES select the Art Style from Below....</marquee>
+    <div class="folk-art-list">
+        
+        <div class="folk-art-item" onclick="openModal('Kalamkari')">Kalamkari</div>
+        <div class="folk-art-item" onclick="openModal('Madhubani')">Madhubani</div>
+        <div class="folk-art-item" onclick="openModal('Warli')">Warli</div>
+        <div class="folk-art-item" onclick="openModal('Pattachitra')">Pattachitra</div>
+        <div class="folk-art-item" onclick="openModal('Tanjore')">Tanjore</div>
+        <div class="folk-art-item" onclick="openModal('Gond')">Gond</div>
+        <div class="folk-art-item" onclick="openModal('Phad')">Phad</div>
+        <div class="folk-art-item" onclick="openModal('Batik')">Batik</div>
+        <div class="folk-art-item" onclick="openModal('Kutch')">Kutch</div>
+        <div class="folk-art-item" onclick="openModal('Dokra')">Dokra</div>
+        <div class="folk-art-item" onclick="openModal('Santhal')">Santhal</div>
+        <div class="folk-art-item" onclick="openModal('Chhau')">Chhau</div>
+        <div class="folk-art-item" onclick="openModal('Miniature')">Miniature</div>
+        <div class="folk-art-item" onclick="openModal('Kalighat')">Kalighat</div>
+        <div class="folk-art-item" onclick="openModal('Bamboo')">Bamboo</div>
+        <div class="folk-art-item" onclick="openModal('Rajasthani')">Rajasthani</div>
+        <div class="folk-art-item" onclick="openModal('Ajanta')">Ajanta</div>
+        <div class="folk-art-item" onclick="openModal('Sanjhi')">Sanjhi</div>
+        <div class="folk-art-item" onclick="openModal('Pichwai')">Pichwai</div>
+        <div class="folk-art-item" onclick="openModal('Nirmal')">Nirmal</div>
+        <div class="folk-art-item" onclick="openModal('Pattachitra')">Pattachitra</div>
+        <div class="folk-art-item" onclick="openModal('Warli')">Warli</div>
+        <div class="folk-art-item" onclick="openModal('Kalamkari')">Kalamkari</div>
+        <div class="folk-art-item" onclick="openModal('Madhubani')">Madhubani</div>
+        <div class="folk-art-item" onclick="openModal('Tanjore')">Tanjore</div>
+        <div class="folk-art-item" onclick="openModal('Gond')">Gond</div>
+        <div class="folk-art-item" onclick="openModal('Phad')">Phad</div>
+        <div class="folk-art-item" onclick="openModal('Batik')">Batik</div>
+        <div class="folk-art-item" onclick="openModal('Kutch')">Kutch</div>
+        <div class="folk-art-item" onclick="openModal('Dokra')">Dokra</div>
+        <div class="folk-art-item" onclick="openModal('Santhal')">Santhal</div>
+        <div class="folk-art-item" onclick="openModal('Chhau')">Chhau</div>
+        <div class="folk-art-item" onclick="openModal('Miniature')">Miniature</div>
+        <div class="folk-art-item" onclick="openModal('Kalighat')">Kalighat</div>
+        <div class="folk-art-item" onclick="openModal('Bamboo')">Bamboo</div>
+        <div class="folk-art-item" onclick="openModal('Rajasthani')">Rajasthani</div>
+        <div class="folk-art-item" onclick="openModal('Ajanta')">Ajanta</div>
+        <div class="folk-art-item" onclick="openModal('Sanjhi')">Sanjhi</div>
+        <div class="folk-art-item" onclick="openModal('Pichwai')">Pichwai</div>
+        <div class="folk-art-item" onclick="openModal('Nirmal')">Nirmal</div>
+        <div class="folk-art-item" onclick="openModal('Mughal')">Mughal</div>
+        <div class="folk-art-item" onclick="openModal('Pahari')">Pahari</div>
+        <div class="folk-art-item" onclick="openModal('Terracotta')">Terracotta</div>
+        <div class="folk-art-item" onclick="openModal('Sikkimese')">Sikkimese</div>
+        <div class="folk-art-item" onclick="openModal('Bhuta')">Bhuta</div>
+        <div class="folk-art-item" onclick="openModal('Gurjari')">Gurjari</div>
+        <div class="folk-art-item" onclick="openModal('Bihari')">Bihari</div>
+        <div class="folk-art-item" onclick="openModal('Odisha')">Odisha</div>
+        <div class="folk-art-item" onclick="openModal('Nepali')">Nepali</div>
+        <div class="folk-art-item" onclick="openModal('Mizo')">Mizo</div>
+        <div class="folk-art-item" onclick="openModal('Kashmiri')">Kashmiri</div>
+        <div class="folk-art-item" onclick="openModal('Naga')">Naga</div>
+        <div class="folk-art-item" onclick="openModal('Manipuri')">Manipuri</div>
+        <div class="folk-art-item" onclick="openModal('Bodo')">Bodo</div>
+        <div class="folk-art-item" onclick="openModal('Pencil')">Pencil</div>
+    </div>
+
+    <!-- Modal for Folk Art Details -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="artStyleTitle"></h2>
+            <p id="artStyleDetails"></p>
+            <a id="moreInfoLink" href="" target="_blank">Learn more</a>
+        </div>
+    </div>
+
+    <script>
+        function openModal(style) {
+            const artStylesDetails = {
+                'Kalamkari': {
+                    description: 'Kalamkari is a traditional Indian art form involving hand-painted or block-printed textiles, with intricate designs often depicting mythological narratives.',
+                    link: 'https://en.wikipedia.org/wiki/Kalamkari'
+                },
+                'Madhubani': {
+                    description: 'Madhubani painting, originating from Bihar, is known for its vibrant colors and intricate patterns, often featuring deities and nature themes.',
+                    link: 'https://en.wikipedia.org/wiki/Madhubani_painting'
+                },
+                'Warli': {
+                    description: 'Warli art is a tribal art form from Maharashtra characterized by simple, geometric shapes and motifs representing daily life and nature.',
+                    link: 'https://en.wikipedia.org/wiki/Warli'
+                },
+                'Pattachitra': {
+                    description: 'Pattachitra is a traditional cloth-based scroll painting from Odisha, depicting mythological stories and folk tales with intricate borders.',
+                    link: 'https://en.wikipedia.org/wiki/Pattachitra'
+                },
+                'Tanjore': {
+                    description: 'Tanjore painting is a classical South Indian painting style known for its rich colors, surface richness, and the use of gold foil.',
+                    link: 'https://en.wikipedia.org/wiki/Tanjore_painting'
+                },
+                'Gond': {
+                    description: 'Gond art is a form of painting from the Gond tribal community in Madhya Pradesh, using bright colors and intricate patterns inspired by nature.',
+                    link: 'https://en.wikipedia.org/wiki/Gond_art'
+                },
+                'Phad': {
+                    description: 'Phad painting is a traditional folk art from Rajasthan, characterized by its large narrative scrolls depicting stories of local deities and heroes.',
+                    link: 'https://en.wikipedia.org/wiki/Phad_painting'
+                },
+                'Batik': {
+                    description: 'Batik is a technique of wax-resist dyeing applied to whole cloth, popular in many parts of India, particularly in the state of Gujarat.',
+                    link: 'https://en.wikipedia.org/wiki/Batik'
+                },
+                'Kutch': {
+                    description: 'Kutch embroidery is a traditional form of hand-stitched embroidery from the Kutch region of Gujarat, known for its vibrant colors and intricate designs.',
+                    link: 'https://en.wikipedia.org/wiki/Kutch#Art_and_culture'
+                },
+                'Dokra': {
+                    description: 'Dokra is a traditional metal casting art form of India, known for its unique handmade artifacts and figurines, particularly from the tribal regions.',
+                    link: 'https://en.wikipedia.org/wiki/Dokra'
+                },
+                'Santhal': {
+                    description: 'Santhal painting is a tribal art form from the Santhal community of Jharkhand, depicting daily life, culture, and nature through vivid colors.',
+                    link: 'https://en.wikipedia.org/wiki/Santhal'
+                },
+                'Chhau': {
+                    description: 'Chhau is a traditional dance form from eastern India, characterized by its masks and vibrant costumes, often associated with folk art.',
+                    link: 'https://en.wikipedia.org/wiki/Chhau_dance'
+                },
+                'Miniature': {
+                    description: 'Miniature painting is a traditional art form characterized by small, detailed paintings, often depicting historical events and royal portraits.',
+                    link: 'https://en.wikipedia.org/wiki/Miniature_painting'
+                },
+                'Kalighat': {
+                    description: 'Kalighat painting is a form of folk painting that originated in West Bengal, depicting mythological themes and everyday life in a simplistic style.',
+                    link: 'https://en.wikipedia.org/wiki/Kalighat_painting'
+                },
+                'Bamboo': {
+                    description: 'Bamboo crafts are traditional arts practiced in various states of India, using bamboo to create functional and decorative items.',
+                    link: 'https://en.wikipedia.org/wiki/Bamboo'
+                },
+                'Rajasthani': {
+                    description: 'Rajasthani art is a broad category that includes various traditional art forms from Rajasthan, known for its rich colors and vibrant themes.',
+                    link: 'https://en.wikipedia.org/wiki/Rajasthani_art'
+                },
+                'Ajanta': {
+                    description: 'Ajanta paintings are ancient murals found in the Ajanta caves, depicting Buddhist themes with vibrant colors and intricate designs.',
+                    link: 'https://en.wikipedia.org/wiki/Ajanta_caves'
+                },
+                'Sanjhi': {
+                    description: 'Sanjhi is a traditional art of paper cutting practiced in India, particularly during festivals, known for its intricate designs and patterns.',
+                    link: 'https://en.wikipedia.org/wiki/Sanjhi'
+                },
+                'Pichwai': {
+                    description: 'Pichwai is a traditional form of painting from Rajasthan, depicting the life of Lord Krishna, characterized by intricate details and vibrant colors.',
+                    link: 'https://en.wikipedia.org/wiki/Pichwai'
+                },
+                'Nirmal': {
+                    description: 'Nirmal painting is a traditional art form from Telangana, known for its intricate wooden toys and vibrant colors.',
+                    link: 'https://en.wikipedia.org/wiki/Nirmal'
+                },
+                'Mughal': {
+                    description: 'Mughal painting is a style that developed during the Mughal Empire, combining Persian influences with Indian themes.',
+                    link: 'https://en.wikipedia.org/wiki/Mughal_painting'
+                },
+                'Pahari': {
+                    description: 'Pahari painting refers to various styles of painting that emerged in the hilly regions of North India, characterized by vibrant colors and intricate designs.',
+                    link: 'https://en.wikipedia.org/wiki/Pahari_painting'
+                },
+                'Terracotta': {
+                    description: 'Terracotta art refers to the art of molding and firing clay to create decorative items, widely practiced in various parts of India.',
+                    link: 'https://en.wikipedia.org/wiki/Terracotta'
+                },
+                'Sikkimese': {
+                    description: 'Sikkimese art refers to the traditional art forms from Sikkim, including painting, sculpture, and wood carving, often depicting Buddhist themes.',
+                    link: 'https://en.wikipedia.org/wiki/Sikkim#Art_and_culture'
+                },
+                'Bhuta': {
+                    description: 'Bhuta art is a traditional art form from Karnataka, known for its vibrant colors and depiction of local deities and folklore.',
+                    link: 'https://en.wikipedia.org/wiki/Bhuta'
+                },
+                'Gurjari': {
+                    description: 'Gurjari art refers to the traditional art forms from the Gurjar community, known for their intricate designs and vibrant colors.',
+                    link: 'https://en.wikipedia.org/wiki/Gurjari'
+                },
+                'Bihari': {
+                    description: 'Bihari art refers to the traditional art forms from Bihar, including Madhubani and other folk arts characterized by vibrant colors and intricate patterns.',
+                    link: 'https://en.wikipedia.org/wiki/Bihari'
+                },
+                'Odisha': {
+                    description: 'Odisha art includes various traditional forms of art, including Pattachitra and sand art, known for their intricate designs and themes.',
+                    link: 'https://en.wikipedia.org/wiki/Odisha#Art_and_culture'
+                },
+                'Nepali': {
+                    description: 'Nepali art encompasses various traditional forms, including Thangka painting and wood carving, often depicting Buddhist themes.',
+                    link: 'https://en.wikipedia.org/wiki/Nepali_art'
+                },
+                'Mizo': {
+                    description: 'Mizo art includes traditional crafts and paintings from the Mizo community, known for their intricate patterns and vibrant colors.',
+                    link: 'https://en.wikipedia.org/wiki/Mizo'
+                },
+                'Kashmiri': {
+                    description: 'Kashmiri art is known for its intricate woodwork, Pashmina shawls, and carpets, often depicting floral and geometric patterns.',
+                    link: 'https://en.wikipedia.org/wiki/Kashmir#Art_and_culture'
+                },
+                'Naga': {
+                    description: 'Naga art includes various traditional crafts and textiles from the Naga tribes, known for their vibrant colors and intricate designs.',
+                    link: 'https://en.wikipedia.org/wiki/Naga_people'
+                },
+                'Manipuri': {
+                    description: 'Manipuri art encompasses various traditional forms, including dance, music, and crafts, known for their intricate patterns and themes.',
+                    link: 'https://en.wikipedia.org/wiki/Manipuri_art'
+                },
+                'Bodo': {
+                    description: 'Bodo art includes traditional crafts and textile arts from the Bodo community, known for their vibrant colors and intricate designs.',
+                    link: 'https://en.wikipedia.org/wiki/Bodo_people'
+                },
+                'Pencil': {
+                    description: 'Pencil art refers to the traditional art of drawing and sketching, often practiced in various styles across India.',
+                    link: 'https://en.wikipedia.org/wiki/Drawing'
+                }
+            };
+
+            document.getElementById('artStyleTitle').innerText = style;
+            document.getElementById('artStyleDetails').innerText = artStylesDetails[style].description;
+            document.getElementById('moreInfoLink').href = artStylesDetails[style].link;
+            document.getElementById('myModal').style.display = "block";
+        }
+
+        function closeModal() {
+            document.getElementById('myModal').style.display = "none";
+        }
+    </script>
+</body>
+</html>
